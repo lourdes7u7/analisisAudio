@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ExpresaTEA — Análisis de Audio</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <h1>ExpresaTEA</h1>
+      <p>Análisis avanzado de audio para desarrollo del lenguaje</p>
+    </div>
+
+    <!-- Progress Wizard -->
+    <div class="wizard-container">
+      <div class="wizard">
+        <div class="wizard-progress" id="wizardProgress"></div>
+        
+        <div class="wizard-step active" id="step1">
+          <div class="wizard-step-circle">1</div>
+          <div class="wizard-step-label">Datos del Paciente</div>
+        </div>
+        
+        <div class="wizard-step" id="step2">
+          <div class="wizard-step-circle">2</div>
+          <div class="wizard-step-label">Configuración</div>
+        </div>
+        
+        <div class="wizard-step" id="step3">
+          <div class="wizard-step-circle">3</div>
+          <div class="wizard-step-label">Análisis de Audio</div>
+        </div>
+        
+        <div class="wizard-step" id="step4">
+          <div class="wizard-step-circle">4</div>
+          <div class="wizard-step-label">Resultados</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <!-- Step 1: Patient Data -->
+      <section id="startSection" class="fade-in">
+        <h2 class="section-title">📋 Información del Paciente y Centro Médico</h2>
+        
+        <div class="form-sections">
+          <div class="form-section">
+            <h2>👤 Datos del Paciente</h2>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label for="patientId">ID Paciente:</label>
+                <input id="patientId" type="text" placeholder="Ej: P001" required>
+              </div>
+              <div class="form-group">
+                <label for="patientFullName">Nombre Completo:</label>
+                <input id="patientFullName" type="text" placeholder="Nombre y apellidos" required>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="patientAge">Edad:</label>
+                <input type="number" id="patientAge" placeholder="Años" min="1" max="120" required>
+              </div>
+              <div class="form-group">
+                <label for="patientGender">Género:</label>
+                <select id="patientGender" required>
+                  <option value="">Seleccionar...</option>
+                  <option value="m">Masculino</option>
+                  <option value="f">Femenino</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row full-width">
+              <div class="form-group">
+                <label for="diagnostic">Diagnóstico:</label>
+                <input id="diagnostic" type="text" placeholder="Diagnóstico médico" required>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h2>🏥 Centro Médico</h2>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label for="medicalCenterId">ID Centro:</label>
+                <input id="medicalCenterId" type="text" placeholder="Ej: CM001" required>
+              </div>
+              <div class="form-group">
+                <label for="medicalCenterName">Nombre del Centro:</label>
+                <input id="medicalCenterName" type="text" placeholder="Hospital/Clínica" required>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="medicalPlace">Ubicación:</label>
+                <input id="medicalPlace" type="text" placeholder="Ciudad, Estado" required>
+              </div>
+              <div class="form-group">
+                <label for="specialistName">Especialista:</label>
+                <input id="specialistName" type="text" placeholder="Dr./Dra. Nombre" required>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="controls">
+          <button id="startBtn" class="btn-primary">🚀 Continuar al Análisis</button>
+        </div>
+      </section>
+
+      <!-- Step 2: Analysis Configuration -->
+      <form id="analyzeForm" style="display:none;" class="slide-in" enctype="multipart/form-data">
+        <h2 class="section-title">⚙️ Configuración del Análisis</h2>
+        <input type="hidden" id="reportId" name="reportId">
+        
+        <div class="analysis-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="levelSelect">Nivel:</label>
+              <select id="levelSelect" name="level" required>
+                <option value="">Seleccionar nivel...</option>
+                <option>Level 1</option>
+              </select>
+            </div>
+            
+            <div class="form-group" id="levelSubOptions">
+              <!-- Se llena dinámicamente -->
+            </div>
+          </div>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label for="currentWordSelect">Palabra Objetivo:</label>
+              <select id="currentWordSelect" name="word" required>
+                <option value="">— Selecciona una palabra —</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label for="sessionNumber">Número de Sesión:</label>
+              <input type="number" id="sessionNumber" name="sessionNumber" min="1" value="1" required>
+            </div>
+          </div>
+
+          <div class="upload-box">
+            <input type="file" id="audioFile" name="audio" accept="audio/*" hidden required>
+            <button type="button" id="selectAudioBtn">
+              🎤 Seleccionar Archivo de Audio
+            </button>
+            <div id="fileName"></div>
+          </div>
+
+          <div class="controls">
+            <button type="submit" class="btn-success">🔍 Analizar Audio</button>
+          </div>
+        </div>
+      </form>
+
+      <!-- Loading State -->
+      <div id="loading" style="display:none" class="fade-in">
+        <div class="loading-spinner"></div>
+        <div class="loading-title">🔄 Procesando Audio...</div>
+        <div class="loading-subtitle">Detectando segmentos y analizando pronunciación</div>
+      </div>
+
+      <!-- Table Controls -->
+      <div class="controls" id="tableControls" style="display:none;">
+        <button id="clearBtn" class="btn-danger">🗑️ Limpiar Tabla</button>
+        <button id="finishBtn" class="btn-success" style="display:none">📥 Finalizar y Descargar JSON</button>
+      </div>
+
+      <!-- Results Table -->
+      <div class="table-container">
+        <table id="resultsTable" style="display:none;">
+          <thead>
+            <tr>
+              <th>Reporte ID</th>
+              <th>Sesión</th>
+              <th>Palabra</th>
+              <th>Repetición</th>
+              <th>Precisión</th>
+              <th>Validación</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td colspan="6" class="no-data">Sin datos disponibles.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script src="/static/script.js"></script>
+</body>
+</html>
