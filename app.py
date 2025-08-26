@@ -21,7 +21,7 @@ wit_api_silabas = os.environ.get('WIT_API_SILABAS', "TGOBGNEL3NSLKLAJKWIG4ML46YJ
 def analyze_audio(fp):
     """Carga audio y calcula métricas acústicas más precisas."""
     try:
-        y, sr = librosa.load(fp, sr=None)
+        y, sr = librosa.load(fp, sr=16000)
         
         # Extraer pitch/F0
         pitches, magnitudes = librosa.piptrack(y=y, sr=sr, threshold=0.1)
