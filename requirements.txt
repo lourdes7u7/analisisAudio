@@ -5,3 +5,5 @@ scipy==1.14.0
 soundfile==0.12.1
 requests==2.32.3
 gunicorn==21.2.0
+cffi==1.15.1
+pysoundfile==0.4.2
